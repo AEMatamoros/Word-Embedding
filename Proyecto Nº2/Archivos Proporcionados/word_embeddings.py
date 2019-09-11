@@ -4,7 +4,7 @@ from gensim.models import Word2Vec
 import numpy as np
 import os
 import unicodedata#Libreria que nos permite eliminar las tildes
-import re#Libreria que nos permite realizar split con multiples caracteres
+import re#Libreria que nos permite utilizar expresiones regulares(NOs ayudara a realizar split delimitado por varios caracteres)
 
 
 class WordEmbedding:
