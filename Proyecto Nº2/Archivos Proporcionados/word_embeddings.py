@@ -11,7 +11,7 @@ class WordEmbedding:
 
   def __init__(self, corpus_path):
 	  documentos=list(os.listdir(corpus_path))
-	  corpus=[]
+	  self._corpus=[]
 	  for documento in documentos:
 	    abrirDoc= open(corpus_path+"/"+str(documento),"r")
 	    texto= abrirDoc.read().lower()#Asignacion de el archivo de texto a una variable de tipo string
@@ -26,8 +26,8 @@ class WordEmbedding:
 	    #Dividir split (por espacio en blanco) 
 	    lista_palabras= texto_formateado.split()
 	    #Agregando listas de palabras a corpus
-	    corpus.append(lista_palabras)
-	  print(corpus)
+	    self._corpus.append(lista_palabras)
+	  #print(corpus)
 	  
    
   pass
@@ -59,6 +59,40 @@ class WordEmbedding:
     """
 
   def bag_of_words(self):
+    #Se determina la frecuencia de cada 
+    #palabra para conocer el tamaño n de la matriz
+    prebag = []
+    for sentence in self._corpus:
+      for word in sentence: 
+        if word not in prebag:
+          prebag.append(word)
+    
+    #Se obtiene el tamaño de la matriz      
+    self.n = len(prebag)
+    #Se ordena las palabras alfabeticamente
+    sortedWords = sorted(prebag)
+    #Se crea la matriz de orden nxm
+    bag_of_words = np.zeros(shape=(self.n,len(self._corpus)))
+   
+    i = 0
+    j = 0
+    #Se obtiene la incidencia de cada palabra y se llena 
+    # el bag of words.
+    for sentence in self._corpus:
+      for sortWord in sortedWords:
+        for word in sentence:
+          if word == sortWord and i<self.n:
+            bag_of_words[i][j]+=1
+        i+=1
+      j+=1
+      i=0
+    
+    print(bag_of_words)
+    
+
+    
+    
+
     """ 
     Este método retornará una matriz de entrenamiento cuyas columnas representarán cada uno de los documentos del corpus, el tamaño de la matriz será de nxm, donde n es el número total de palabras diferentes que hay en todo el corpus y m es el número de documentos del corpus.
     
@@ -114,6 +148,8 @@ nuevaruta = str(os.getcwd())+r'/test_corpus'
 
 #Crear objeto de tipo WordEmbedding
 WEmbedding1= WordEmbedding(nuevaruta)
+
+WEmbedding1.bag_of_words()
     
     
     
