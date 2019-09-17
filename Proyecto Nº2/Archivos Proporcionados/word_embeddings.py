@@ -129,29 +129,34 @@ class WordEmbedding:
             model = Word2Vec(doc, size=50, min_count=1, workers=1, seed=1)
             vecs.append(list(model.wv.vocab))
 
-        vec_model = []
-        for char in vecs:
-            vec_model.append(model.wv[char])
+        max_values = []
+        min_values = []
+        doc_max = []
+        doc_min = []
+        for chars in vecs:
+            for char in chars:
+                max_value = np.amax(model.wv[char])
+                min_value = np.amin(model.wv[char])
+                max_values.append(max_value)
+                min_values.append(min_value)
 
-        vec_min = np.amin(vec_model[0], axis=1)
-        vec_max = np.amax(vec_model[0], axis=1)
-        
-        w2v = np.concatenate((vec_min, vec_max), axis=0)
+        doc_max.append(max_values)
+        doc_min.append(min_values)
+
+        final_vector = []
+        final_vectors = []
+        for i in range(len(doc_max)):
+            final_vector = np.concatenate((doc_min[i], doc_max[i]))
+            final_vectors.append(final_vector)
+
+
+        w2v = np.zeros(shape = (len(final_vector), len(self._corpus)))
+        for i in range(len(final_vector)):
+            for j in range(len(self._corpus)):
+                doc = final_vectors[j]
+                w2v[i][j] = doc[i]
 
         print(w2v)
-
-        
-
-
-
-
-
-
-
-
-
-
-
 
 nuevaruta = str(getcwd())+r'/test_corpus'
 
