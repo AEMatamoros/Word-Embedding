@@ -128,19 +128,23 @@ class WordEmbedding:
         for doc in documents:
             model = Word2Vec(doc, size=50, min_count=1, workers=1, seed=1)
             vecs.append(list(model.wv.vocab))
-        letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'll', 'm',
-                   'n', 'ñ', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w','x', 'y', 'z']
-        values = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28]
 
-        abc = dict(zip(letters, values))
-        w2v = dict()
+        vec_model = []
+        for char in vecs:
+            vec_model.append(model.wv[char])
 
-        for elem in vecs:
-            for word in elem:
-                if(word in abc):
-                    w2v[word] = abc[word]
+        vec_min = np.amin(vec_model[0], axis=1)
+        vec_max = np.amax(vec_model[0], axis=1)
+        
+        w2v = np.concatenate((vec_min, vec_max), axis=0)
+
+        print(w2v)
 
         
+
+
+
+
 
 
 
